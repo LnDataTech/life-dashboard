@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 LnData 人生儀表板</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* 自定義漸變背景 */
+        .gradient-bg {
+            background-color: #111827;
+            background-image: radial-gradient(at 47% 33%, hsl(204.00, 65%, 25%) 0, transparent 59%), 
+                              radial-gradient(at 82% 65%, hsl(285.45, 45%, 20%) 0, transparent 55%);
+        }
+        /* 卡片樣式 */
+        .card {
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* 按鈕樣式 */
+        .btn-primary {
+            background-color: #3b82f6;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+        .btn-secondary {
+            background-color: #4b5563;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #6b7280;
+        }
+        /* 選項樣式 */
+        .option-card {
+            border: 2px solid #4b5563;
+            transition: all 0.2s ease-in-out;
+        }
+        .option-card:hover {
+            border-color: #3b82f6;
+            transform: scale(1.03);
+        }
+        .option-card.selected {
+            border-color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+        }
+        /* 隱藏滾動條 */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white min-h-screen flex items-center justify-center p-4">
+
+    <div id="app-container" class="w-full max-w-md mx-auto">
+        
+        <!-- 開始畫面 -->
+        <div id="start-screen" class="card rounded-2xl p-8 text-center animate-fade-in">
+            <h1 class="text-3xl font-bold mb-2">我的 LnData 人生儀表板</h1>
+            <p class="text-gray-300 mb-8">放榜，不是終點。<br>是時候查看你獨一無二的人生數據了！</p>
+            <button id="start-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold">🚀 建立我的儀表板</button>
+            <p class="text-xs text-gray-500 mt-6">由 LnData 麟數據科技溫馨呈獻</p>
+        </div>
+
+        <!-- 問答畫面 -->
+        <div id="quiz-screen" class="hidden">
+            <div id="quiz-container" class="card rounded-2xl p-6 sm:p-8">
+                <!-- 問題進度條 -->
+                <div class="mb-6">
+                    <div class="flex justify-between items-center mb-1">
+                         <span id="question-number" class="text-sm font-semibold text-blue-300">問題 1 / 7</span>
+                         <span id="question-title" class="text-lg font-bold">你的名字</span>
+                    </div>
+                    <div class="w-full bg-gray-600 rounded-full h-2.5">
+                        <div id="progress-bar" class="bg-blue-500 h-2.5 rounded-full transition-all duration-500" style="width: 14.28%"></div>
+                    </div>
+                </div>
+                
+                <!-- 問題內容 -->
+                <div id="questions-wrapper" class="overflow-hidden">
+                    <!-- 問題1: 姓名 -->
+                    <div id="question-1" class="w-full flex-shrink-0">
+                        <h2 class="text-xl mb-4">請告訴我們你的名字或暱稱</h2>
+                        <p class="text-sm text-gray-400 mb-4">這會顯示在你的專屬儀表板標題上。</p>
+                        <input id="name-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的酷炫暱稱">
+                        <button id="name-submit-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold mt-6">下一步</button>
+                    </div>
+
+                    <!-- 問題2: 心情 -->
+                    <div id="question-2" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">對於這次的成果，你的心情更接近？</h2>
+                        <div class="space-y-3">
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="A" data-next="3"><span class="text-2xl mr-3">🥳</span> 超乎預期！解鎖新成就！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="B" data-next="3"><span class="text-2xl mr-3">😌</span> 嗯，在掌握之中。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="C" data-next="3"><span class="text-2xl mr-3">🤔</span> 有點小遺憾，但準備 move on！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="D" data-next="3"><span class="text-2xl mr-3">🤯</span> 數據太亂，需要重新開機！</div>
+                        </div>
+                    </div>
+                    <!-- 問題3: 學習力 -->
+                    <div id="question-3" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">當一本超厚的書或新技能擺在面前，你的反應是？</h2>
+                        <div class="space-y-3">
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="75" data-next="4"><span class="font-bold text-blue-300">濃縮咖啡型：</span>給我重點就好</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="85" data-next="4"><span class="font-bold text-blue-300">手沖慢燉型：</span>慢慢來，享受過程</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="4"><span class="font-bold text-blue-300">海綿寶寶型：</span>來吧！知識就是力量！</div>
+                        </div>
+                    </div>
+                    <!-- 問題4: 創造力 -->
+                    <div id="question-4" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">如果沒有SOP，需要你自由發揮時，你感覺...</h2>
+                        <div class="space-y-3">
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="5">太棒了！空白畫布就是我的遊樂場。</div>
+                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="80" data-next="5">有點小慌，但樂於嘗試新路線。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="65" data-next="5">等等，可以給我一些參考範例嗎？</div>
+                        </div>
+                    </div>
+                    <!-- 問題5: 行動力 -->
+                    <div id="question-5" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">有了靈感或任務，你通常會？</h2>
+                        <div class="space-y-3">
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="6"><span class="text-2xl mr-3">🏃</span> 馬上動起來，先做再調整！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="80" data-next="6"><span class="text-2xl mr-3">📋</span> 先列清單，計畫再行動。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="65" data-next="6"><span class="text-2xl mr-3">🛋️</span> 需要點時間醞釀，慢慢來。</div>
+                        </div>
+                    </div>
+                    <!-- 問題6: 抗壓力 -->
+                    <div id="question-6" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">當事情不如預期時，你會怎麼面對？</h2>
+                        <div class="space-y-3">
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="7"><span class="text-2xl mr-3">🔄</span> 快速調整策略，下一局更好！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="75" data-next="7"><span class="text-2xl mr-3">🤯</span> 需要時間消化，然後慢慢復原。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="60" data-next="7"><span class="text-2xl mr-3">😤</span> 一直想著那件事，有點難釋懷。</div>
+                        </div>
+                    </div>
+                    <!-- 問題7: 超能力與學校 -->
+                    <div id="question-7" class="w-full flex-shrink-0 hidden">
+                        <h2 class="text-xl mb-4">最後，來定義你的獨特之處！</h2>
+                        <div class="mb-6">
+                            <label for="superpower-input" class="block text-base mb-2">除了課本，你最酷的技能是？</label>
+                            <input id="superpower-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="例如：迷因製造、貓咪溝通…">
+                        </div>
+                        <div>
+                             <label for="school-input" class="block text-base mb-2">想分享在儀表板上嗎？告訴我們你考上的學校 (選填)</label>
+                             <input id="school-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的未來主場！">
+                        </div>
+                        <button id="submit-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold mt-8">查看我的儀表板</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 讀取畫面 -->
+        <div id="loading-screen" class="hidden card rounded-2xl p-8 text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-t-2 border-blue-500 mx-auto"></div>
+            <h2 class="text-2xl font-bold mt-6">正在生成儀表板...</h2>
+            <p id="loading-text" class="text-gray-300 mt-2">正在從宇宙數據庫中抓取您的洞察...</p>
+        </div>
+
+        <!-- 結果畫面 -->
+        <div id="result-screen" class="hidden">
+            <!-- 這部分是將要被轉換成圖片的區域 -->
+            <div id="dashboard-to-capture" class="card rounded-2xl p-6 sm:p-8 w-full gradient-bg">
+                <div class="text-center border-b border-gray-600 pb-4 mb-4">
+                     <p class="text-xs text-blue-300">LnData 麟數據科技</p>
+                     <h1 id="dashboard-main-title" class="text-3xl font-bold mt-2"> </h1>
+                     <h2 id="dashboard-subtitle" class="text-xl font-medium text-gray-300 mt-1"> </h2>
+                     <p id="dashboard-school" class="hidden text-amber-300 font-semibold mt-2"></p>
+                </div>
+               
+                <div class="grid grid-cols-2 gap-4 items-center">
+                    <!-- 左側儀表 -->
+                    <div class="col-span-1 flex flex-col items-center justify-center">
+                        <h3 class="font-semibold text-lg mb-2">未來潛力指數</h3>
+                        <div id="gauge-chart" class="relative w-40 h-24"></div>
+                    </div>
+                     <!-- 右側徽章 -->
+                    <div class="col-span-1 flex flex-col items-center justify-center bg-gray-700/50 rounded-xl p-4 h-full">
+                         <h3 class="font-semibold text-lg mb-2">稀有成就徽章</h3>
+                         <div id="superpower-badge" class="text-yellow-300 text-5xl">🏆</div>
+                         <p id="superpower-text" class="text-center font-bold text-sm mt-1"></p>
+                    </div>
+                </div>
+
+                <!-- 進度條區域 -->
+                <div class="mt-6 space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-blue-300">學習力</span><span id="learning-value" class="text-sm font-medium"></span></div>
+                        <div class="w-full bg-gray-600 rounded-full h-4"><div id="learning-bar" class="bg-blue-500 h-4 rounded-full"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-purple-300">創造力</span><span id="creativity-value" class="text-sm font-medium"></span></div>
+                        <div class="w-full bg-gray-600 rounded-full h-4"><div id="creativity-bar" class="bg-purple-500 h-4 rounded-full"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-green-300">行動力</span><span id="action-value" class="text-sm font-medium"></span></div>
+                        <div class="w-full bg-gray-600 rounded-full h-4"><div id="action-bar" class="bg-green-500 h-4 rounded-full"></div></div>
+                    </div>
+                     <div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-yellow-300">抗壓力</span><span id="stress-value" class="text-sm font-medium"></span></div>
+                        <div class="w-full bg-gray-600 rounded-full h-4"><div id="stress-bar" class="bg-yellow-500 h-4 rounded-full"></div></div>
+                    </div>
+                </div>
+                
+                <!-- 數據洞察 -->
+                <div class="mt-6 bg-gray-800/70 p-4 rounded-lg">
+                    <h3 class="font-bold text-lg mb-2">📊 數據洞察</h3>
+                    <p id="insight-text" class="text-sm text-gray-300"></p>
+                </div>
+            </div>
+            
+            <!-- 操作按鈕 -->
+            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                 <button id="download-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold">下載我的儀表板</button>
+                 <button id="restart-btn" class="btn-secondary w-full py-3 rounded-lg text-lg font-bold">再測一次</button>
+            </div>
+            <p class="text-center text-xs text-gray-400 mt-4">分享並標註 #我的LnData人生儀表板</p>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM 元素獲取
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const loadingScreen = document.getElementById('loading-screen');
+            const resultScreen = document.getElementById('result-screen');
+            
+            const startBtn = document.getElementById('start-btn');
+            const nameInput = document.getElementById('name-input');
+            const nameSubmitBtn = document.getElementById('name-submit-btn');
+            const optionCards = document.querySelectorAll('.option-card');
+            const submitBtn = document.getElementById('submit-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const restartBtn = document.getElementById('restart-btn');
+
+            const progressBar = document.getElementById('progress-bar');
+            const questionNumber = document.getElementById('question-number');
+            const questionTitle = document.getElementById('question-title');
+
+            const superpowerInput = document.getElementById('superpower-input');
+            const schoolInput = document.getElementById('school-input');
+            const dashboardToCapture = document.getElementById('dashboard-to-capture');
+
+            // 儲存答案的物件
+            let userAnswers = {};
+            const questionTitles = ["你的名字", "心情儀錶盤", "學習力", "創造力", "行動力", "抗壓力", "個人特質"];
+            const TOTAL_QUESTIONS = 7;
+            
+            // 頁面切換函數
+            const showScreen = (screen) => {
+                startScreen.classList.add('hidden');
+                quizScreen.classList.add('hidden');
+                loadingScreen.classList.add('hidden');
+                resultScreen.classList.add('hidden');
+                screen.classList.remove('hidden');
+            };
+
+            // 開始按鈕事件
+            startBtn.addEventListener('click', () => {
+                showScreen(quizScreen);
+                showQuestion(1);
+            });
+            
+            // 姓名提交按鈕事件
+            nameSubmitBtn.addEventListener('click', () => {
+                const name = nameInput.value.trim();
+                if (name === "") {
+                    alert("請輸入你的名字或暱稱！");
+                    return;
+                }
+                userAnswers[1] = name;
+                showQuestion(2);
+            });
+
+            // 處理問答選項
+            optionCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const questionDiv = card.closest('div[id^="question-"]');
+                    const questionId = parseInt(questionDiv.id.split('-')[1]);
+                    const nextQuestionId = parseInt(card.dataset.next);
+                    
+                    userAnswers[questionId] = card.dataset.value;
+
+                    questionDiv.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+
+                    setTimeout(() => {
+                        if (nextQuestionId && document.getElementById(`question-${nextQuestionId}`)) {
+                            showQuestion(nextQuestionId);
+                        }
+                    }, 300);
+                });
+            });
+
+            // 顯示特定問題
+            function showQuestion(id) {
+                document.querySelectorAll('div[id^="question-"]').forEach(q => q.classList.add('hidden'));
+                document.getElementById(`question-${id}`).classList.remove('hidden');
+
+                progressBar.style.width = `${id / TOTAL_QUESTIONS * 100}%`;
+                questionNumber.textContent = `問題 ${id} / ${TOTAL_QUESTIONS}`;
+                questionTitle.textContent = questionTitles[id - 1];
+            }
+
+            // 最終提交按鈕事件
+            submitBtn.addEventListener('click', () => {
+                const superpower = superpowerInput.value.trim();
+                if (superpower === "") {
+                    alert("請輸入你最酷的技能！");
+                    return;
+                }
+                userAnswers[7] = superpower;
+                userAnswers[8] = schoolInput.value.trim(); // 用8號key來儲存學校
+                
+                showScreen(loadingScreen);
+                simulateLoadingAndGenerateResult();
+            });
+
+            // 模擬讀取並生成結果
+            function simulateLoadingAndGenerateResult() {
+                const loadingTexts = [
+                    "分析您的獨特演算法...",
+                    "與全球潛力數據庫進行比對...",
+                    "正在繪製您的專屬圖表..."
+                ];
+                let textIndex = 0;
+                document.getElementById('loading-text').textContent = loadingTexts[0];
+                const interval = setInterval(() => {
+                    textIndex++;
+                    if (textIndex < loadingTexts.length) {
+                         document.getElementById('loading-text').textContent = loadingTexts[textIndex];
+                    } else {
+                        clearInterval(interval);
+                        generateResult();
+                        showScreen(resultScreen);
+                    }
+                }, 1000);
+            }
+            
+            // 生成儀表板結果
+            function generateResult() {
+                // 1. 設置主標題、副標題和學校
+                const name = userAnswers[1];
+                document.getElementById('dashboard-main-title').textContent = `${name}的潛力儀表板`;
+                
+                const moodKey = userAnswers[2];
+                const titleMap = {
+                    'A': '一份「超乎預期」的潛力儀表板',
+                    'B': '一份「穩健佈局」的潛力儀表板',
+                    'C': '一份「準備逆襲」的潛力儀表板',
+                    'D': '一份「即將重啟」的潛力儀表板'
+                };
+                document.getElementById('dashboard-subtitle').textContent = titleMap[moodKey];
+                
+                const school = userAnswers[8];
+                const schoolEl = document.getElementById('dashboard-school');
+                if (school) {
+                    schoolEl.textContent = `🎓 ${school}`;
+                    schoolEl.classList.remove('hidden');
+                } else {
+                    schoolEl.classList.add('hidden');
+                }
+
+                // 2. 計算潛力指數
+                const potentialScore = Math.floor(Math.random() * 20) + 80;
+                createGaugeChart(potentialScore);
+
+                // 3. 設置超能力徽章
+                document.getElementById('superpower-text').textContent = userAnswers[7];
+
+                // 4. 設置進度條
+                const scores = {
+                    learning: parseInt(userAnswers[3]),
+                    creativity: parseInt(userAnswers[4]),
+                    action: parseInt(userAnswers[5]),
+                    stress: parseInt(userAnswers[6]),
+                };
+                document.getElementById('learning-value').textContent = `${scores.learning}%`;
+                document.getElementById('learning-bar').style.width = `${scores.learning}%`;
+                document.getElementById('creativity-value').textContent = `${scores.creativity}%`;
+                document.getElementById('creativity-bar').style.width = `${scores.creativity}%`;
+                document.getElementById('action-value').textContent = `${scores.action}%`;
+                document.getElementById('action-bar').style.width = `${scores.action}%`;
+                document.getElementById('stress-value').textContent = `${scores.stress}%`;
+                document.getElementById('stress-bar').style.width = `${scores.stress}%`;
+
+                // 5. 設置數據洞察文案
+                const textMaps = {
+                    learning: {'75': '濃縮咖啡型', '85': '手沖慢燉型', '95': '海綿寶寶型'},
+                    creativity: {'95': '畫布級', '80': '探索家型', '65': '建築師型'},
+                    action: {'95': '行動派', '80': '計畫通', '65': '沉思者'},
+                    stress: {'95': '韌性十足', '75': '自我療癒型', '60': '感受細膩型'}
+                };
+                document.getElementById('insight-text').textContent = `數據顯示，${name}是一位「${textMaps.learning[scores.learning]}」學習者，同時是「${textMaps.action[scores.action]}」與「${textMaps.stress[scores.stress]}」的實踐家。您獨特的「${userAnswers[7]}」超能力，更是無價的資產。記住，所有指標都是動態的，未來由您親手創造！`;
+            }
+
+            // 創建儀表盤圖表
+            function createGaugeChart(value) {
+                const gaugeChartContainer = document.getElementById('gauge-chart');
+                const percentage = value / 100;
+                const degrees = percentage * 180;
+                const rads = (degrees * Math.PI) / 180;
+                const r = 80;
+                const x = r * Math.cos(rads);
+                const y = r * Math.sin(rads);
+                gaugeChartContainer.innerHTML = `
+                    <svg viewBox="-100 -20 200 120" class="w-full h-full">
+                        <defs>
+                            <linearGradient id="gaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#a855f7" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M -80 80 A 80 80 0 0 1 80 80" fill="none" stroke="#4b5563" stroke-width="12" stroke-linecap="round" />
+                        <path d="M -80 80 A 80 80 0 0 1 ${-x} ${80 - y}" fill="none" stroke="url(#gaugeGradient)" stroke-width="12" stroke-linecap="round" />
+                        <text x="0" y="50" text-anchor="middle" font-size="32" font-weight="bold" fill="#fff">${value}</text>
+                        <text x="0" y="75" text-anchor="middle" font-size="12" fill="#9ca3af">Potentials</text>
+                    </svg>
+                `;
+            }
+
+            // 下載按鈕事件
+            downloadBtn.addEventListener('click', () => {
+                html2canvas(document.getElementById('dashboard-to-capture'), {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: null
+                }).then(canvas => {
+                    const image = canvas.toDataURL("image/png");
+                    const link = document.createElement('a');
+                    link.download = `我的LnData人生儀表板-${userAnswers[1]}.png`;
+                    link.href = image;
+                    link.click();
+                });
+            });
+            
+            // 重新開始按鈕事件
+            restartBtn.addEventListener('click', () => {
+                userAnswers = {};
+                nameInput.value = '';
+                superpowerInput.value = '';
+                schoolInput.value = '';
+                document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+                showScreen(quizScreen);
+                showQuestion(1);
+            });
+        });
+    </script>
+</body>
+</html>
