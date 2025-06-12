@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 LnData 人生儀表板</title>
+    <title>我的學習人生儀表板</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,6 +67,22 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Logo 樣式 */
+        .lndata-logo {
+            position: fixed;
+            right: 1.5rem; /* 24px */
+            bottom: 1.5rem; /* 24px */
+            opacity: 0.6;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 1000;
+        }
+        .lndata-logo:hover {
+            opacity: 1;
+        }
+        .lndata-logo img {
+            width: 120px;
+        }
     </style>
 </head>
 <body class="gradient-bg text-white min-h-screen flex items-center justify-center p-4">
@@ -75,8 +91,8 @@
         
         <!-- 開始畫面 -->
         <div id="start-screen" class="card rounded-2xl p-8 text-center animate-fade-in">
-            <h1 class="text-3xl font-bold mb-2">我的 LnData 人生儀表板</h1>
-            <p class="text-gray-300 mb-8">放榜，不是終點。<br>是時候查看你獨一無二的人生數據了！</p>
+            <h1 class="text-3xl font-bold mb-2">我的學習人生儀表板</h1>
+            <p class="text-gray-300 mb-8">放榜，不是終點。<br>是時候查看你獨一無二的學習人生數據了！</p>
             <button id="start-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold">🚀 建立我的儀表板</button>
             <p class="text-xs text-gray-500 mt-6">由 LnData 麟數據科技溫馨呈獻</p>
         </div>
@@ -101,7 +117,7 @@
                     <div id="question-1" class="w-full flex-shrink-0">
                         <h2 class="text-xl mb-4">請告訴我們你的名字或暱稱</h2>
                         <p class="text-sm text-gray-400 mb-4">這會顯示在你的專屬儀表板標題上。</p>
-                        <input id="name-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的酷炫暱稱">
+                        <input id="name-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的酷炫暱稱。ex: 分科戰士、數據魔法師">
                         <button id="name-submit-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold mt-6">下一步</button>
                     </div>
 
@@ -112,34 +128,34 @@
                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="A" data-next="3"><span class="text-2xl mr-3">🥳</span> 超乎預期！解鎖新成就！</div>
                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="B" data-next="3"><span class="text-2xl mr-3">😌</span> 嗯，在掌握之中。</div>
                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="C" data-next="3"><span class="text-2xl mr-3">🤔</span> 有點小遺憾，但準備 move on！</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="D" data-next="3"><span class="text-2xl mr-3">🤯</span> 數據太亂，需要重新開機！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="D" data-next="3"><span class="text-2xl mr-3">🤯</span> 思緒太亂就像龍捲風，需要重新開機！</div>
                         </div>
                     </div>
                     <!-- 問題3: 學習力 -->
                     <div id="question-3" class="w-full flex-shrink-0 hidden">
                         <h2 class="text-xl mb-4">當一本超厚的書或新技能擺在面前，你的反應是？</h2>
                         <div class="space-y-3">
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="75" data-next="4"><span class="font-bold text-blue-300">濃縮咖啡型：</span>給我重點就好</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="85" data-next="4"><span class="font-bold text-blue-300">手沖慢燉型：</span>慢慢來，享受過程</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="4"><span class="font-bold text-blue-300">海綿寶寶型：</span>來吧！知識就是力量！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="72" data-next="4"><span class="font-bold text-blue-300">濃縮咖啡型：</span>給我重點就好：）</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="85" data-next="4"><span class="font-bold text-blue-300">手沖慢燉型：</span>慢慢來，享受過程～</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="96" data-next="4"><span class="font-bold text-blue-300">海綿寶寶型：</span>來吧！知識就是力量！</div>
                         </div>
                     </div>
                     <!-- 問題4: 創造力 -->
                     <div id="question-4" class="w-full flex-shrink-0 hidden">
                         <h2 class="text-xl mb-4">如果沒有SOP，需要你自由發揮時，你感覺...</h2>
                         <div class="space-y-3">
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="5">太棒了！空白畫布就是我的遊樂場。</div>
-                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="80" data-next="5">有點小慌，但樂於嘗試新路線。</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="65" data-next="5">等等，可以給我一些參考範例嗎？</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="5">太棒了！空白畫布就是我的遊樂場～</div>
+                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="80" data-next="5">有點小慌，但偶爾嘗試新路線又何妨？</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="64" data-next="5">等等，可以給我一些參考範例嗎!?</div>
                         </div>
                     </div>
                     <!-- 問題5: 行動力 -->
                     <div id="question-5" class="w-full flex-shrink-0 hidden">
-                        <h2 class="text-xl mb-4">有了靈感或任務，你通常會？</h2>
+                        <h2 class="text-xl mb-4">突然有了靈感或任務，你通常會怎麼反應？</h2>
                         <div class="space-y-3">
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="6"><span class="text-2xl mr-3">🏃</span> 馬上動起來，先做再調整！</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="80" data-next="6"><span class="text-2xl mr-3">📋</span> 先列清單，計畫再行動。</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="65" data-next="6"><span class="text-2xl mr-3">🛋️</span> 需要點時間醞釀，慢慢來。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="92" data-next="6"><span class="text-2xl mr-3">🏃</span> 馬上動起來，先做再調整！</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="83" data-next="6"><span class="text-2xl mr-3">📋</span> 先列清單，計畫好再行動。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="65" data-next="6"><span class="text-2xl mr-3">⏲️</span> 需要點時間醞釀，欲速則不達。</div>
                         </div>
                     </div>
                     <!-- 問題6: 抗壓力 -->
@@ -147,20 +163,20 @@
                         <h2 class="text-xl mb-4">當事情不如預期時，你會怎麼面對？</h2>
                         <div class="space-y-3">
                             <div class="option-card p-4 rounded-lg cursor-pointer" data-value="95" data-next="7"><span class="text-2xl mr-3">🔄</span> 快速調整策略，下一局更好！</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="75" data-next="7"><span class="text-2xl mr-3">🤯</span> 需要時間消化，然後慢慢復原。</div>
-                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="60" data-next="7"><span class="text-2xl mr-3">😤</span> 一直想著那件事，有點難釋懷。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="78" data-next="7"><span class="text-2xl mr-3">🥹</span> 需要時間消化，但會好起來的。</div>
+                            <div class="option-card p-4 rounded-lg cursor-pointer" data-value="60" data-next="7"><span class="text-2xl mr-3">😤</span> 反覆檢討，但有點emo難釋懷。</div>
                         </div>
                     </div>
                     <!-- 問題7: 超能力與學校 -->
                     <div id="question-7" class="w-full flex-shrink-0 hidden">
                         <h2 class="text-xl mb-4">最後，來定義你的獨特之處！</h2>
                         <div class="mb-6">
-                            <label for="superpower-input" class="block text-base mb-2">除了課本，你最酷的技能是？</label>
-                            <input id="superpower-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="例如：迷因製造、貓咪溝通…">
+                            <label for="superpower-input" class="block text-base mb-2">除了課本上，你最酷的技能是？</label>
+                            <input id="superpower-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="ex: 迷因製造、貓咪溝通…">
                         </div>
                         <div>
                              <label for="school-input" class="block text-base mb-2">想分享在儀表板上嗎？告訴我們你考上的學校 (選填)</label>
-                             <input id="school-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的未來主場！">
+                             <input id="school-input" type="text" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="你的未來主場！ex: LnData大學">
                         </div>
                         <button id="submit-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold mt-8">查看我的儀表板</button>
                     </div>
@@ -195,7 +211,7 @@
                      <!-- 右側徽章 -->
                     <div class="col-span-1 flex flex-col items-center justify-center bg-gray-700/50 rounded-xl p-4 h-full">
                          <h3 class="font-semibold text-lg mb-2">稀有成就徽章</h3>
-                         <div id="superpower-badge" class="text-yellow-300 text-5xl">🏆</div>
+                         <div id="superpower-badge" class="text-yellow-300 text-5xl">⭐</div>
                          <p id="superpower-text" class="text-center font-bold text-sm mt-1"></p>
                     </div>
                 </div>
@@ -232,10 +248,15 @@
                  <button id="download-btn" class="btn-primary w-full py-3 rounded-lg text-lg font-bold">下載我的儀表板</button>
                  <button id="restart-btn" class="btn-secondary w-full py-3 rounded-lg text-lg font-bold">再測一次</button>
             </div>
-            <p class="text-center text-xs text-gray-400 mt-4">分享並標註 #我的LnData人生儀表板</p>
+            <p class="text-center text-xs text-gray-400 mt-4">分享並標註 #我的學習人生儀表板</p>
         </div>
 
     </div>
+
+    <!-- LnData Logo -->
+    <a href="https://www.lndata.com/" target="_blank" class="lndata-logo">
+        <img src="img/LnData_logo_gw.png" alt="LnData 麟數據科技 Logo">
+    </a>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -263,7 +284,7 @@
 
             // 儲存答案的物件
             let userAnswers = {};
-            const questionTitles = ["你的名字", "心情儀錶盤", "學習力", "創造力", "行動力", "抗壓力", "個人特質"];
+            const questionTitles = ["你的名字", "考後心情", "學習力", "創造力", "行動力", "抗壓力", "個人特質"];
             const TOTAL_QUESTIONS = 7;
             
             // 頁面切換函數
@@ -365,17 +386,17 @@
                 
                 const moodKey = userAnswers[2];
                 const titleMap = {
-                    'A': '一份「超乎預期」的潛力儀表板',
-                    'B': '一份「穩健佈局」的潛力儀表板',
-                    'C': '一份「準備逆襲」的潛力儀表板',
-                    'D': '一份「即將重啟」的潛力儀表板'
+                    'A': '超越自己，準備迎接更多挑戰',
+                    'B': '穩扎穩打，精彩生活才開始',
+                    'C': '衣角微髒，心中有光',
+                    'D': '水池裡面銀龍魚，重新啟航展鴻圖'
                 };
                 document.getElementById('dashboard-subtitle').textContent = titleMap[moodKey];
                 
                 const school = userAnswers[8];
                 const schoolEl = document.getElementById('dashboard-school');
                 if (school) {
-                    schoolEl.textContent = `🎓 ${school}`;
+                    schoolEl.textContent = `🎓來自${school}的準學生`;
                     schoolEl.classList.remove('hidden');
                 } else {
                     schoolEl.classList.add('hidden');
@@ -406,12 +427,12 @@
 
                 // 5. 設置數據洞察文案
                 const textMaps = {
-                    learning: {'75': '濃縮咖啡型', '85': '手沖慢燉型', '95': '海綿寶寶型'},
-                    creativity: {'95': '畫布級', '80': '探索家型', '65': '建築師型'},
-                    action: {'95': '行動派', '80': '計畫通', '65': '沉思者'},
-                    stress: {'95': '韌性十足', '75': '自我療癒型', '60': '感受細膩型'}
+                    learning: {'72': '切入重點型', '85': '慢工細活型', '96': '海綿寶寶型'},
+                    creativity: {'95': '天才畫家', '80': '探索家', '64': '建築師'},
+                    action: {'92': '行動派', '83': '計畫通', '65': '沉思者'},
+                    stress: {'95': '韌性十足', '78': '能自我療癒', '60': '感受細膩'}
                 };
-                document.getElementById('insight-text').textContent = `數據顯示，${name}是一位「${textMaps.learning[scores.learning]}」學習者，同時是「${textMaps.action[scores.action]}」與「${textMaps.stress[scores.stress]}」的實踐家。您獨特的「${userAnswers[7]}」超能力，更是無價的資產。記住，所有指標都是動態的，未來由您親手創造！`;
+                document.getElementById('insight-text').textContent = `數據顯示，${name}是一位${textMaps.learning[scores.learning]}的${textMaps.creativity[scores.creativity]}，你可以說他是個${textMaps.action[scores.action]}，或是${textMaps.stress[scores.stress]}的學習家。但很多人不知道的是，其實${name}還有${userAnswers[7]}的超能力。記住，所有指標都是動態的，由你定義最獨特的你！`;
             }
 
             // 創建儀表盤圖表
@@ -448,7 +469,7 @@
                 }).then(canvas => {
                     const image = canvas.toDataURL("image/png");
                     const link = document.createElement('a');
-                    link.download = `我的LnData人生儀表板-${userAnswers[1]}.png`;
+                    link.download = `我的學習人生儀表板-${userAnswers[1]}_LnData.png`;
                     link.href = image;
                     link.click();
                 });
