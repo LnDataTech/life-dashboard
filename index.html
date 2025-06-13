@@ -3,12 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的學習人生儀表板</title>
+    <title>學習人生數據儀表板</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="icon" href="https://lndatatech.github.io/jkopay-2024/favicon.png" type="image/x-icon">
+    <link rel="apple-touch-icon" href="https://lndatatech.github.io/jkopay-2024/favicon.png">
+    <meta name="description"
+        content="LnData的學習人生數據儀表板透過有趣的心理測驗，探索你的性格特質與學習風格！歡迎學測放榜後的各位準大學生來試試，可以測出你獨一無二的儀表板喔！" />
+    <meta name="keywords"
+        content="學習 心理測驗, 學習 性格分析, 數據心理學, 人格測驗, 數據 心理測驗, 心理 小遊戲, 大數據心理測驗, 數據人生, 學習 儀錶板" />
+    <meta name="author" content="LnData 麟數據科技 feat Ida" />
+    <link rel="bookmark" href="https://raw.githubusercontent.com/LnDataTech/life-dashboard/refs/heads/main/favicon.ico">
+    <link rel="shortcut icon"
+        href="https://raw.githubusercontent.com/LnDataTech/life-dashboard/refs/heads/main/favicon.ico">
+
+    <meta property="og:title" content="數據人生心理測驗｜你是哪種類型的人？" />
+    <meta property="og:image"
+        content="https://raw.githubusercontent.com/LnDataTech/life-dashboard/refs/heads/main/cover.png" />
+    <meta property="og:url" content="https://lndatatech.github.io/life-dashboard" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="LnData" />
+    <meta property="og:description"
+        content="用數據揭開你的性格特質與學習風格！歡迎學測放榜後的各位準大學生來試試，可以測出你獨一無二的儀表板喔！" />
+    <meta name="twitter:site" content="@LnData_Official" />
+    <meta name="twitter:image"
+        content="https://raw.githubusercontent.com/LnDataTech/life-dashboard/refs/heads/main/cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="街口支付：2024 年度數據回顧" />
+    <meta name="twitter:description"
+        content="LnData的學習人生數據儀表板透過有趣的心理測驗，探索你的性格特質與學習風格！歡迎學測放榜後的各位準大學生來試試，可以測出你獨一無二的儀表板喔！" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Schema Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "LnData 學習人生數據儀表板",
+        "description": "透過有趣的心理測驗，探索你的性格特質與學習風格，並生成專屬的儀表板！",
+        "url": "https://lndatatech.github.io/life-dashboard",
+        "applicationCategory": "GameApplication",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript and a modern web browser.",
+        "author": {
+            "@type": "Organization",
+            "name": "LnData 麟數據科技"
+        }
+    }
+    </script>
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
@@ -67,7 +111,15 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-
+        #superpower-text {
+            padding-top: 0.5rem; /* 8px */
+        }
+        .powers {
+            padding-bottom: 0.25rem; /* 4px */
+        }
+        .values {
+            line-height: 24px; 
+        }
         /* Logo 樣式 */
         .lndata-logo {
             position: fixed;
@@ -219,19 +271,19 @@
                 <!-- 進度條區域 -->
                 <div class="mt-6 space-y-4">
                     <div>
-                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-blue-300">學習力</span><span id="learning-value" class="text-sm font-medium"></span></div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-blue-300 powers">學習力</span><span id="learning-value" class="text-sm font-medium values"></span></div>
                         <div class="w-full bg-gray-600 rounded-full h-4"><div id="learning-bar" class="bg-blue-500 h-4 rounded-full"></div></div>
                     </div>
                     <div>
-                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-purple-300">創造力</span><span id="creativity-value" class="text-sm font-medium"></span></div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-purple-300 powers">創造力</span><span id="creativity-value" class="text-sm font-medium values"></span></div>
                         <div class="w-full bg-gray-600 rounded-full h-4"><div id="creativity-bar" class="bg-purple-500 h-4 rounded-full"></div></div>
                     </div>
                     <div>
-                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-green-300">行動力</span><span id="action-value" class="text-sm font-medium"></span></div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-green-300 powers">行動力</span><span id="action-value" class="text-sm font-medium values"></span></div>
                         <div class="w-full bg-gray-600 rounded-full h-4"><div id="action-bar" class="bg-green-500 h-4 rounded-full"></div></div>
                     </div>
                      <div>
-                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-yellow-300">抗壓力</span><span id="stress-value" class="text-sm font-medium"></span></div>
+                        <div class="flex justify-between mb-1"><span class="text-base font-medium text-yellow-300 powers">抗壓力</span><span id="stress-value" class="text-sm font-medium values"></span></div>
                         <div class="w-full bg-gray-600 rounded-full h-4"><div id="stress-bar" class="bg-yellow-500 h-4 rounded-full"></div></div>
                     </div>
                 </div>
